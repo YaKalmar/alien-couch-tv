@@ -37,15 +37,6 @@ def print_response(response):
     print(response)
 
 
-def parse_video_id(url):
-    p = re.compile(".*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*")
-    matches = p.match(url)
-    if matches:
-        return matches.groups()[0]
-    else:
-        return None;
-
-
 # Build a resource based on a list of properties given as key-value pairs.
 # Leave properties with empty values out of the inserted resource.
 def build_resource(properties):
@@ -86,6 +77,41 @@ def build_resource(properties):
                 # already has a "snippet" object.
                 ref = ref[key]
     return resource
+
+
+def parse_video_id(url):
+    p = re.compile(".*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*")
+    matches = p.match(url)
+    if matches:
+        return matches.groups()[0]
+    else:
+        return None
+
+
+def getting_list_of_videos():
+    headers = {
+        'authority': 'www.reddit.com',
+        'cache-control': 'max-age=0',
+        'upgrade-insecure-requests': '1',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'accept-encoding': 'gzip, deflate, br',
+    }
+
+    params = (
+        ('t', 'week'),
+        ('limit', 50),
+    )
+
+    response = requests.get('https://www.reddit.com/r/videos/top.json', headers=headers, params=params)
+    response_json = response.json()
+
+    videos_ids = []
+    for i in response_json['data']['children']:
+        video_id = parse_video_id(i['data']['url'])
+        if video_id:
+            videos_ids.append(video_id)
+    return videos_ids
 
 
 if __name__ == '__main__':
