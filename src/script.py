@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import os
-import time
 import calendar
-import requests
-import json
-from collections import namedtuple
+import os
 import re
+import time
 
-import google.oauth2.credentials
-
-import google_auth_oauthlib.flow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+import requests
 from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
 # The CLIENT_SECRETS_FILE variable specifies the name of a file that contains
 # the OAuth 2.0 information for this application, including its client_id and
@@ -128,7 +122,7 @@ def parse_video_id(url):
         return None
 
 
-def getting_list_of_videos():
+def getting_list_of_videos_ids():
     headers = {
         'authority': 'www.reddit.com',
         'cache-control': 'max-age=0',
@@ -157,3 +151,25 @@ def getting_list_of_videos():
 if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     client = get_authenticated_service()
+
+    playlist_name = calendar.timegm(time.gmtime())
+
+    playlist = playlists_insert(client,
+                                {'snippet.title': playlist_name,
+                                 'snippet.description': 'From Reddit with ❤️',
+                                 'snippet.tags[]': '',
+                                 'snippet.defaultLanguage': 'en',
+                                 'status.privacyStatus': 'private'},
+                                part='snippet,status',
+                                onBehalfOfContentOwner='')
+
+    videos_to_add = getting_list_of_videos_ids()
+
+    for video_id in videos_to_add:
+        playlist_items_insert(client,
+                              {'snippet.playlistId': playlist['id'],
+                               'snippet.resourceId.kind': 'youtube#video',
+                               'snippet.resourceId.videoId': video_id,
+                               'snippet.position': ''},
+                              part='snippet',
+                              onBehalfOfContentOwner='')
