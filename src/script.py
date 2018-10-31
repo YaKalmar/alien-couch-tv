@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
+import time
+import calendar
+import requests
+import json
+from collections import namedtuple
+import re
 
 import google.oauth2.credentials
 
@@ -29,6 +35,15 @@ def get_authenticated_service():
 
 def print_response(response):
     print(response)
+
+
+def parse_video_id(url):
+    p = re.compile(".*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*")
+    matches = p.match(url)
+    if matches:
+        return matches.groups()[0]
+    else:
+        return None;
 
 
 # Build a resource based on a list of properties given as key-value pairs.
