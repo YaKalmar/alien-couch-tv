@@ -79,6 +79,46 @@ def build_resource(properties):
     return resource
 
 
+# Remove keyword arguments that are not set
+def remove_empty_kwargs(**kwargs):
+    good_kwargs = {}
+    if kwargs is not None:
+        for key, value in kwargs.iteritems():
+            if value:
+                good_kwargs[key] = value
+    return good_kwargs
+
+
+def playlists_insert(client, properties, **kwargs):
+    # See full sample for function
+    resource = build_resource(properties)
+
+    # See full sample for function
+    kwargs = remove_empty_kwargs(**kwargs)
+
+    response = client.playlists().insert(
+        body=resource,
+        **kwargs
+    ).execute()
+
+    return response
+
+
+def playlist_items_insert(client, properties, **kwargs):
+    # See full sample for function
+    resource = build_resource(properties)
+
+    # See full sample for function
+    kwargs = remove_empty_kwargs(**kwargs)
+
+    response = client.playlistItems().insert(
+        body=resource,
+        **kwargs
+    ).execute()
+
+    return print_response(response)
+
+
 def parse_video_id(url):
     p = re.compile(".*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*")
     matches = p.match(url)
