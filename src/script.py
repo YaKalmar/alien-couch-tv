@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import calendar
 import os
 import re
 import time
@@ -152,7 +151,7 @@ if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     client = get_authenticated_service()
 
-    playlist_name = calendar.timegm(time.gmtime())
+    playlist_name = time.strftime('%A %d %B %Y')
 
     playlist = playlists_insert(client,
                                 {'snippet.title': playlist_name,
