@@ -155,7 +155,7 @@ if __name__ == '__main__':
 
     playlist = playlists_insert(client,
                                 {'snippet.title': playlist_name,
-                                 'snippet.description': 'From Reddit with ❤️',
+                                 'snippet.description': 'Alien couch FTW 💪️',
                                  'snippet.tags[]': '',
                                  'snippet.defaultLanguage': 'en',
                                  'status.privacyStatus': 'private'},
