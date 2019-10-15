@@ -134,7 +134,7 @@ def getting_list_of_videos_ids():
 
     params = (
         ('t', 'week'),
-        ('limit', 50),
+        ('limit', 75),
     )
 
     response = requests.get('https://www.reddit.com/r/videos/top.json', headers=headers, params=params)
